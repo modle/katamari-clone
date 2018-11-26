@@ -8,7 +8,8 @@ using System.Collections;
 public class PlayerCameraController : MonoBehaviour {
     public GameObject player;
     private Vector3 offset;
-    private float boardTiltMax = 15f; // Maximum angle to tilt the camera to fake the level tilting
+    private float boardTiltMax = 30f; // Maximum angle to tilt the camera to fake the level tilting
+    private float currentVerticalRotation;
     private Vector3 desiredPosition;
     private GameObject desiredPositionObject;
 
@@ -18,7 +19,6 @@ public class PlayerCameraController : MonoBehaviour {
 
     private float turnAngle = 0.0f;
 
-    // Use this for initialization
     void Start() {
         offset = transform.position;
         desiredPosition = transform.position;
@@ -26,15 +26,18 @@ public class PlayerCameraController : MonoBehaviour {
         DontDestroyOnLoad(desiredPositionObject);
         desiredPositionObject.transform.position = transform.position;
 
-        // find the player object
         if (player == null) {
-
             Debug.LogError("Could not find object \"Player\" ! Aborting GameCamera load.");
             DestroyImmediate(gameObject);
         }
     }
 
     void Update() {
+        if (
+            Input.GetAxisRaw("Right Stick Vertical") < 0 && currentVerticalRotation > -boardTiltMax
+                || Input.GetAxisRaw("Right Stick Vertical") > 0 && currentVerticalRotation < boardTiltMax) {
+            currentVerticalRotation += Input.GetAxisRaw("Right Stick Vertical");
+        }
         // Rotate the camera around the ball to adjust movement when Q or E are pressed (left/right movement)
         turnAngle += Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime;
     }
@@ -56,13 +59,14 @@ public class PlayerCameraController : MonoBehaviour {
         desiredPositionObject.transform.RotateAround(player.transform.position, Vector3.up, turnAngle);
 
         // Deal with forward/backward board rotation
-        desiredPositionObject.transform.RotateAround(player.transform.position, rotationVectorRight, -Input.GetAxisRaw("Vertical") * boardTiltMax);
+        // desiredPositionObject.transform.RotateAround(player.transform.position, rotationVectorRight, -Input.GetAxisRaw("Vertical") * boardTiltMax);
+        desiredPositionObject.transform.RotateAround(player.transform.position, rotationVectorRight, currentVerticalRotation);
 
         // Ensure we're looking at the player before the roll rotation is applied
         desiredPositionObject.transform.LookAt(player.transform.position);
 
         // Apply the roll rotation
-        desiredPositionObject.transform.RotateAround(desiredPositionObject.transform.position, direction, -Input.GetAxisRaw("Horizontal") * boardTiltMax);
+        // desiredPositionObject.transform.RotateAround(desiredPositionObject.transform.position, direction, -Input.GetAxisRaw("Horizontal") * boardTiltMax);
 
         // Lerp the cameras position to match the target object
         transform.position = Vector3.Slerp(transform.position, desiredPositionObject.transform.position, Time.deltaTime * movementDamping);
