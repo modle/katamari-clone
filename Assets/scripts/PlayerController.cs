@@ -63,16 +63,18 @@ public class PlayerController : MonoBehaviour {
         return transform.position.x > maxDistance || transform.position.x < -maxDistance || transform.position.z > maxDistance || transform.position.z < -maxDistance;
     }
 
-	void OnTriggerEnter(Collider other){
-		if (other.gameObject.CompareTag("pickup")) {
-			other.gameObject.SetActive(false);
-			count += 1;
-			SetCountText();
-			if (GameObject.FindGameObjectsWithTag("pickup").Length == 0) {
-				winText.text = "You Win";
-			}
-		}
+	void OnCollisionEnter(Collision other) {
+        if (other.gameObject.tag != "pickup") {
+            return;
+        }
+        DoPickup(other);
 	}
+
+    void DoPickup(Collision other) {
+        other.gameObject.transform.SetParent(transform);
+        Destroy(other.gameObject.GetComponent<Rigidbody>());
+        other.gameObject.GetComponent<Collider>().isTrigger = false;
+    }
 
 	void SetCountText() {
 		countText.text = "Count: " + count.ToString();
