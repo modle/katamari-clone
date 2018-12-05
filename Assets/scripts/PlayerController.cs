@@ -5,34 +5,37 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
+    public static PlayerController controller;
+
     public GameObject camera;
-	public float speed;
-	public Text countText;
-	public Text winText;
-	private int count = 0;
+    public float speed;
     private Vector3 moveVector = Vector3.zero;
     private Vector3 defaultPosition = new Vector3(0, 10f, 0);
     private float maxDistance = 1000f;
     private float baseGravity = 1f;
+    public int massScore = 1;
 
-	void Start() {
-		count = 0;
-		SetCountText();
-		winText.text = "";
-	}
+    void Awake() {
+        // singleton pattern
+        if (controller == null) {
+            controller = this;
+        } else if (controller != this) {
+            Destroy(gameObject);
+        }
+    }
 
-	// physics code
-	void FixedUpdate() {
+    // physics code
+    void FixedUpdate() {
         moveVector = GetMoveVector();
-        moveVector.y = Input.GetAxis("Triggers") * 5;
-		GetComponent<Rigidbody>().AddForce(moveVector * speed);
+        moveVector.y = (Input.GetAxis("Triggers") - 0.1f) * 5;
+        GetComponent<Rigidbody>().AddForce(moveVector * speed);
         ResetIfOutside();
-	}
+    }
 
     Vector3 GetMoveVector() {
         Vector3 tempVector = Vector3.zero;
-		float moveHorizontal = Input.GetAxis("Horizontal");
-		float moveVertical = Input.GetAxis("Vertical");
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
         tempVector = new Vector3(moveHorizontal, 0.0f, moveVertical);
         tempVector = camera.transform.TransformDirection(tempVector);
         return tempVector;
@@ -53,30 +56,23 @@ public class PlayerController : MonoBehaviour {
         return transform.position.y < -25f;
     }
 
-    bool ButtonsArePushed() {
-        print (Input.GetAxis("Triggers"));
-        return Input.GetAxis("Triggers") != 0;
-    }
-
     bool IsOutsideBounds() {
         // return false;
         return transform.position.x > maxDistance || transform.position.x < -maxDistance || transform.position.z > maxDistance || transform.position.z < -maxDistance;
     }
 
-	void OnCollisionEnter(Collision other) {
+    void OnCollisionEnter(Collision other) {
         if (other.gameObject.tag != "pickup") {
             return;
         }
         DoPickup(other);
-	}
+    }
 
     void DoPickup(Collision other) {
         other.gameObject.transform.SetParent(transform);
-        Destroy(other.gameObject.GetComponent<Rigidbody>());
-        other.gameObject.GetComponent<Collider>().isTrigger = false;
+        if (other.gameObject.name == "acube") {
+            Destroy(other.gameObject.GetComponent<Rigidbody>());
+        }
+        massScore++;
     }
-
-	void SetCountText() {
-		countText.text = "Count: " + count.ToString();
-	}
 }

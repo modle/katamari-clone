@@ -46,7 +46,7 @@ public class PlayerCameraController : MonoBehaviour {
         // find the ZX direction from the player to the camera
         var heading = transform.position - player.transform.position;
         heading.y = 0f;
-        var distance = heading.magnitude;
+        var distance = heading.magnitude - PlayerController.controller.massScore;
         var direction = heading / distance;
 
         // Find the right vector for the diretion
