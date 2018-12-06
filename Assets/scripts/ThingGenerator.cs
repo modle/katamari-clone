@@ -5,7 +5,7 @@ using UnityEngine;
 public class ThingGenerator : MonoBehaviour {
 
     public List<Object> things = new List<Object>();
-    int numThings = 200;
+    int numThings = 100;
     int maxDist = 400;
     int thingScaleMax = 5;
 
@@ -14,9 +14,16 @@ public class ThingGenerator : MonoBehaviour {
     }
 
     void LoadPrefabs() {
-        things.Add(Resources.Load("prefabs/asphere", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/acube", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/acylinder", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/asphere", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/acube", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/acylinder", typeof(GameObject)));
+        things.Add(Resources.Load("prefabs/flower01", typeof(GameObject)));
+        things.Add(Resources.Load("prefabs/flower02", typeof(GameObject)));
+        things.Add(Resources.Load("prefabs/flower03", typeof(GameObject)));
+        things.Add(Resources.Load("prefabs/flower04", typeof(GameObject)));
+        things.Add(Resources.Load("prefabs/flower05", typeof(GameObject)));
+        things.Add(Resources.Load("prefabs/flower06", typeof(GameObject)));
+        things.Add(Resources.Load("prefabs/flower07", typeof(GameObject)));
         print (things[0]);
         foreach (Object thing in things) {
             SpawnThings(thing);
@@ -36,10 +43,10 @@ public class ThingGenerator : MonoBehaviour {
         Vector3 positionVector = GetValidPosition();
         positionVector.y = scaleVector.y / 2;
         GameObject instance = Instantiate(theObject, positionVector, Quaternion.identity) as GameObject;
-        instance.transform.localScale = scaleVector;
+        // instance.transform.localScale = scaleVector;
         instance.transform.position = positionVector;
         instance.name = theObject.name;
-        instance.transform.SetParent(transform);
+        instance.transform.SetParent(transform, false);
     }
 
     Vector3 GetScaleVector(string name) {
@@ -66,6 +73,4 @@ public class ThingGenerator : MonoBehaviour {
             Random.Range(-maxDist, maxDist)
         );
     }
-
-
 }

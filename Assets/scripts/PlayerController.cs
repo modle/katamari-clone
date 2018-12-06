@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
     // physics code
     void FixedUpdate() {
         moveVector = GetMoveVector();
-        moveVector.y = (Input.GetAxis("Triggers") - 0.1f) * 5;
+        moveVector.y = (Input.GetAxis("Triggers") - 0.5f) * 2;
         GetComponent<Rigidbody>().AddForce(moveVector * speed);
         ResetIfOutside();
     }
@@ -70,9 +70,9 @@ public class PlayerController : MonoBehaviour {
 
     void DoPickup(Collision other) {
         other.gameObject.transform.SetParent(transform);
-        if (other.gameObject.name == "acube") {
-            Destroy(other.gameObject.GetComponent<Rigidbody>());
-        }
+        // if (other.gameObject.name == "acube") {
+        Destroy(other.gameObject.GetComponent<Rigidbody>());
+        // }
         massScore++;
     }
 }
