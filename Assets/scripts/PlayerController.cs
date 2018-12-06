@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour {
 
     void DoPickup(Collision other) {
         other.gameObject.transform.SetParent(transform);
+        other.gameObject.GetComponent<ThingToggler>().attached = true;
         // if (other.gameObject.name == "acube") {
         Destroy(other.gameObject.GetComponent<Rigidbody>());
         // }
