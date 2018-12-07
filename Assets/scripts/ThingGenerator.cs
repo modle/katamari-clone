@@ -5,7 +5,7 @@ using UnityEngine;
 public class ThingGenerator : MonoBehaviour {
 
     public List<Object> things = new List<Object>();
-    int numThings = 100;
+    int numThings = 1000;
     int maxDist = 400;
     int thingScaleMax = 5;
 
@@ -17,15 +17,16 @@ public class ThingGenerator : MonoBehaviour {
         // things.Add(Resources.Load("prefabs/asphere", typeof(GameObject)));
         // things.Add(Resources.Load("prefabs/acube", typeof(GameObject)));
         // things.Add(Resources.Load("prefabs/acylinder", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/flower01", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/flower02", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/flower03", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/flower04", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/flower05", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/flower06", typeof(GameObject)));
-        things.Add(Resources.Load("prefabs/flower07", typeof(GameObject)));
-        print (things[0]);
+        // things.Add(Resources.Load("prefabs/flower01", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/flower02", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/flower03", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/flower04", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/flower05", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/flower06", typeof(GameObject)));
+        // things.Add(Resources.Load("prefabs/flower07", typeof(GameObject)));
+        things.Add(Resources.Load("Microphone/Prefabs/Microphone Prefab", typeof(GameObject)));
         foreach (Object thing in things) {
+            print (thing);
             SpawnThings(thing);
         }
     }
@@ -41,7 +42,7 @@ public class ThingGenerator : MonoBehaviour {
     public void InstantiateResource(Object theObject) {
         Vector3 scaleVector = GetScaleVector(theObject.name);
         Vector3 positionVector = GetValidPosition();
-        positionVector.y = scaleVector.y / 2;
+        positionVector.y = scaleVector.y / 4;
         GameObject instance = Instantiate(theObject, positionVector, Quaternion.identity) as GameObject;
         // instance.transform.localScale = scaleVector;
         instance.transform.position = positionVector;
